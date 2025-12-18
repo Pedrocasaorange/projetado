@@ -24,7 +24,7 @@ class CashFlowModel:
         """Generate dates from nov/25 to jan/27"""
         dates = []
         start_date = datetime(2025, 11, 1)
-        end_date = datetime(2027, 2, 1)
+        end_date = datetime(2030, 12, 30)
         
         current_date = start_date
         while current_date < end_date:

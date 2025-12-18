@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-chart-line text-blue-600 text-2xl mr-3"></i>
+                        <span class="text-xl font-bold text-gray-800">{{ titulo }}</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex flex-col items-end">
+                        <span class="text-sm font-medium text-gray-700">Olá, {{ usuario }}</span>
+                        <span class="text-xs text-gray-500">Setor: {{ setor }}</span>
+                    </div>
+                    <a href="/logout" 
+                       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Cards de Resumo -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-500">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-lg mr-4">
+                        <i class="fas fa-tasks text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Tarefas Pendentes</h3>
+                        <p class="text-3xl font-bold text-gray-900">12</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-green-500">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-lg mr-4">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Concluídas</h3>
+                        <p class="text-3xl font-bold text-gray-900">48</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-purple-500">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-lg mr-4">
+                        <i class="fas fa-clock text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Em Andamento</h3>
+                        <p class="text-3xl font-bold text-gray-900">7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Específico por Setor -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center mb-6">
+                <div class="p-3 bg-indigo-100 rounded-lg mr-4">
+                    {% if setor == 'Obra' %}
+                        <i class="fas fa-hard-hat text-indigo-600 text-2xl"></i>
+                    {% elif setor == 'Legalizacao' %}
+                        <i class="fas fa-gavel text-indigo-600 text-2xl"></i>
+                    {% elif setor == 'Projeto' %}
+                        <i class="fas fa-project-diagram text-indigo-600 text-2xl"></i>
+                    {% elif setor == 'Marketing' %}
+                        <i class="fas fa-bullhorn text-indigo-600 text-2xl"></i>
+                    {% else %}
+                        <i class="fas fa-user-tie text-indigo-600 text-2xl"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Bem-vindo ao Painel de {{ setor }}</h2>
+                    <p class="text-gray-600">Aqui estão as informações específicas do seu setor</p>
+                </div>
+            </div>
+
+            <div class="border-t pt-6">
+                {% if setor == 'Obra' %}
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Gestão de Obras</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Monitoramento de cronogramas</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Controle de materiais e equipamentos</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span>Gestão de equipes no canteiro</span>
+                        </li>
+                    </ul>
+                </div>
+                {% elif setor == 'Legalizacao' %}
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Processos de Legalização</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-file-contract text-blue-500 mr-3"></i>
+                            <span>Documentação regulatória</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-balance-scale text-blue-500 mr-3"></i>
+                            <span>Aprovações municipais</span>
+                        </li>
+                    </ul>
+                </div>
+                {% elif setor == 'Projeto' %}
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Gerenciamento de Projetos</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-drafting-compass text-purple-500 mr-3"></i>
+                            <span>Projetos arquitetônicos</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-calculator text-purple-500 mr-3"></i>
+                            <span>Orçamentos e planejamento</span>
+                        </li>
+                    </ul>
+                </div>
+                {% elif setor == 'Marketing' %}
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Campanhas de Marketing</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-chart-bar text-orange-500 mr-3"></i>
+                            <span>Análise de métricas</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-ad text-orange-500 mr-3"></i>
+                            <span>Gestão de campanhas</span>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-8">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-500 text-sm">
+                <p>Sistema de Gerenciamento © 2024 - Setor: {{ setor }}</p>
+                <p class="mt-1">Sessão ativa para: {{ usuario }}</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
