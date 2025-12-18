@@ -5,16 +5,16 @@ import os
 app = Flask(__name__, 
             template_folder='templates',
             static_folder='static')
-app.secret_key = 'sua_chave_secreta_aqui_mude_em_producao'  # Mude para uma chave segura
+app.secret_key = 'Chave_segurança'  # Mude para uma chave segura
 
 # Dicionário de usuários e seus setores
 USUARIOS = {
-    'Legalização': {'senha': '123', 'setor': 'legalizacao'},
-    'obra': {'senha': '123', 'setor': 'obra'},
-    'Projetos': {'senha': '123', 'setor': 'projeto'},
-    'marketing': {'senha': '123', 'setor': 'marketing'},
-    'Produtos': {'senha': '123', 'setor': 'Marketing'},
-    'Pos obra': {'senha': '123', 'setor': 'Pos obra'},
+    'Legalização': {'senha': 'legalização2025', 'setor': 'legalizacao'},
+    'obra': {'senha': 'Obra2025', 'setor': 'obra'},
+    'Projetos': {'senha': 'Projetos2025', 'setor': 'projeto'},
+    'marketing': {'senha': 'Marketing2025', 'setor': 'marketing'},
+    'Produtos': {'senha': 'Produtos2025', 'setor': 'Marketing'},
+    'Pos obra': {'senha': 'Pos-obra2025', 'setor': 'Pos obra'},
     'ADM': {'senha': 'C2025asaOrange', 'setor': 'Adiministrador'}
 }
 
