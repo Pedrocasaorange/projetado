@@ -4,6 +4,8 @@ from config import SECRET_KEY, EMPREENDIMENTOS, USUARIOS
 from templates import LOGIN_TEMPLATE, SISTEMA_TEMPLATE
 from utils import carregar_dados, salvar_dados
 from excel_generator import gerar_excel
+import webbrowser
+from threading import Timer
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -129,6 +131,15 @@ def api_exportar():
         'Content-Disposition': f'attachment; filename=Fluxo_{setor_alvo}.xlsx'
     }
 
+def abrir_navegador():
+    """Função para abrir o navegador automaticamente na porta 5000"""
+    webbrowser.open("http://127.0.0.1:5000")
+
 if __name__ == '__main__':
-    carregar_dados()
-    app.run(debug=True, port=5000)
+    carregar_dados() #
+    
+    # Inicia o timer para abrir o navegador após 1.5 segundos
+    Timer(2.5, abrir_navegador).start()
+    
+    # Inicia o servidor Flask na porta 5000
+    app.run(debug=False, port=5000)
