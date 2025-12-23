@@ -27,6 +27,42 @@
       "entrada": 21350.0,
       "usuario": "Pos obra",
       "data_atualizacao": "2025-12-23T13:57:12.817813"
+    },
+    {
+      "mes": "fev/26",
+      "empreendimento": "ALLEGRO",
+      "entrada": null,
+      "setor": "pos_obra"
+    },
+    {
+      "mes": "nov/25",
+      "empreendimento": "ALLEGRO",
+      "entrada": 1240,
+      "setor": "legalizacao"
+    },
+    {
+      "mes": "dez/25",
+      "empreendimento": "ALLEGRO",
+      "entrada": 120,
+      "setor": "legalizacao"
+    },
+    {
+      "mes": "jan/26",
+      "empreendimento": "ALLEGRO",
+      "entrada": 332430,
+      "setor": "legalizacao"
+    },
+    {
+      "mes": "nov/25",
+      "empreendimento": "ALLEGRO",
+      "entrada": 0,
+      "setor": "pos_obra"
+    },
+    {
+      "mes": "dez/25",
+      "empreendimento": "ALLEGRO",
+      "entrada": 0,
+      "setor": "pos_obra"
     }
   ],
   "meses": [
@@ -94,8 +130,15 @@
     "dez/30"
   ],
   "saldos_iniciais": {
-    "ALLEGRO": 12000.0
-  },
-  "ultima_atualizacao": "2025-12-23T13:57:12.817813",
-  "usuario_ultima_alteracao": "Pos obra"
+    "ALLEGRO": 12000.0,
+    "legalizacao": {
+      "ALLEGRO": 23525
+    },
+    "projeto": {
+      "ALLEGRO": 45640
+    },
+    "produtos": {
+      "ALLEGRO": 350
+    }
+  }
 }

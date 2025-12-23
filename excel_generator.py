@@ -1,104 +1,83 @@
 import io
-from datetime import datetime
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
-from openpyxl.utils import get_column_letter
-from config import EMPREENDIMENTOS
-from utils import calcular_saldo_acumulado_export
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
-def gerar_excel_fluxo(dados, meses, saldos_iniciais, usuario_nome):
+def gerar_excel(dados_filtrados, meses, saldos_iniciais_setor, nome_setor, lista_empreendimentos):
     wb = Workbook()
     ws = wb.active
-    ws.title = "Fluxo de Caixa"
+    ws.title = f"Fluxo - {nome_setor}"
     
-    # --- Configuração de Estilos ---
-    header_font = Font(bold=True, color="FFFFFF", size=12)
-    date_font = Font(bold=True, color="000000", size=11)
-    saldo_font = Font(bold=True, color="2E7D32", size=11)
-    saldo_negativo_font = Font(bold=True, color="C62828", size=11)
-    entrada_font = Font(color="1976D2", size=11)
-    
-    header_fill_saldo = PatternFill(start_color="2E7D32", end_color="2E7D32", fill_type="solid")
-    header_fill_entrada = PatternFill(start_color="1976D2", end_color="1976D2", fill_type="solid")
-    date_fill = PatternFill(start_color="E65100", end_color="E65100", fill_type="solid")
-    saldo_positivo_fill = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
-    saldo_negativo_fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
-    entrada_fill = PatternFill(start_color="E3F2FD", end_color="E3F2FD", fill_type="solid")
-    
-    thin_border = Border(left=Side(style='thin'), right=Side(style='thin'), 
-                         top=Side(style='thin'), bottom=Side(style='thin'))
-    center_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    right_align = Alignment(horizontal="right", vertical="center")
+    font_bold = Font(bold=True)
+    align_center = Alignment(horizontal="center", vertical="center")
+    border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
 
-    # --- Cabeçalho Superior ---
+    # Cabeçalho Principal
     ws.merge_cells('A1:Q1')
-    ws['A1'] = "Projetado - INCORPORAÇÃO - Sistema de Fluxo de Caixa"
-    ws['A1'].font = Font(bold=True, size=14, color="E65100")
-    ws['A1'].alignment = center_align
+    ws['A1'] = f"RELATÓRIO DE FLUXO - SETOR: {nome_setor.upper()}"
+    ws['A1'].font = Font(size=14, bold=True, color="FFFFFF")
+    ws['A1'].fill = PatternFill(start_color="FF6600", end_color="FF6600", fill_type="solid") # Cor Laranja
+    ws['A1'].alignment = align_center
 
-    ws.merge_cells('A2:Q2')
-    ws['A2'] = f"Exportado em: {datetime.now().strftime('%d/%m/%Y %H:%M')} | Usuário: {usuario_nome}"
-    ws['A2'].alignment = center_align
-
-    # --- Títulos das Colunas ---
-    ws['A4'] = "Datas"
-    ws['A4'].font, ws['A4'].fill, ws['A4'].border, ws['A4'].alignment = header_font, date_fill, thin_border, center_align
+    # Cabeçalhos da Tabela
+    ws['A3'] = "Datas"
+    ws['A3'].font = font_bold
+    ws['A3'].alignment = align_center
     
-    col_idx = 1
-    for emp in EMPREENDIMENTOS:
-        s_col = get_column_letter(col_idx + 1)
-        e_col = get_column_letter(col_idx + 2)
+    col_idx = 2
+    for emp in lista_empreendimentos:
+        # Pega saldo inicial deste emp neste setor
+        saldo_ini = saldos_iniciais_setor.get(emp, 0)
         
-        ws[f'{s_col}4'] = f"{emp}\nSaldo"
-        ws[f'{e_col}4'] = f"{emp}\nEntrada"
+        c_saldo = ws.cell(row=3, column=col_idx, value=f"{emp}\nSaldo (Ini: {saldo_ini})")
+        c_saldo.font = font_bold
+        c_saldo.alignment = align_center
+        c_saldo.border = border
         
-        for c in [s_col, e_col]:
-            ws[f'{c}4'].font = header_font
-            ws[f'{c}4'].border = thin_border
-            ws[f'{c}4'].alignment = center_align
-            ws.column_dimensions[c].width = 15
-            
-        ws[f'{s_col}4'].fill = header_fill_saldo
-        ws[f'{e_col}4'].fill = header_fill_entrada
+        c_ent = ws.cell(row=3, column=col_idx+1, value=f"{emp}\nEntrada")
+        c_ent.font = font_bold
+        c_ent.alignment = align_center
+        c_ent.border = border
         col_idx += 2
 
-    # --- Preenchimento do Corpo ---
-    ws.column_dimensions['A'].width = 12
-    row_idx = 5
+    # Preenchendo dados
+    row_idx = 4
     for mes in meses:
-        ws[f'A{row_idx}'] = mes
-        ws[f'A{row_idx}'].border = thin_border
-        ws[f'A{row_idx}'].alignment = center_align
+        ws.cell(row=row_idx, column=1, value=mes).border = border
         
-        c_idx = 1
-        for emp in EMPREENDIMENTOS:
-            saldo_val = calcular_saldo_acumulado_export(mes, emp, dados, meses, saldos_iniciais)
-            ent_val = next((d.get('entrada', 0) for d in dados if d['mes'] == mes and d['empreendimento'] == emp), 0)
+        col_idx = 2
+        for emp in lista_empreendimentos:
+            # 1. Calcular Saldo Acumulado
+            saldo = saldos_iniciais_setor.get(emp, 0)
             
-            s_col = get_column_letter(c_idx + 1)
-            e_col = get_column_letter(c_idx + 2)
+            # --- CORREÇÃO AQUI: (d.get('entrada') or 0) garante que nunca seja None ---
+            mes_index = meses.index(mes)
+            for i in range(mes_index + 1):
+                mes_anterior = meses[i]
+                ent_anterior = next(( (d.get('entrada') or 0) for d in dados_filtrados if d['mes'] == mes_anterior and d['empreendimento'] == emp), 0)
+                saldo -= ent_anterior
             
-            # Célula de Saldo
-            ws[f'{s_col}{row_idx}'] = saldo_val
-            ws[f'{s_col}{row_idx}'].number_format = '#,##0.00'
-            ws[f'{s_col}{row_idx}'].font = saldo_negativo_font if saldo_val < 0 else saldo_font
-            ws[f'{s_col}{row_idx}'].fill = saldo_negativo_fill if saldo_val < 0 else saldo_positivo_fill
-            ws[f'{s_col}{row_idx}'].border = thin_border
-            ws[f'{s_col}{row_idx}'].alignment = right_align
+            # 2. Pegar Entrada Atual
+            entrada = next(( (d.get('entrada') or 0) for d in dados_filtrados if d['mes'] == mes and d['empreendimento'] == emp), 0)
             
-            # Célula de Entrada
-            ws[f'{e_col}{row_idx}'] = ent_val
-            ws[f'{e_col}{row_idx}'].number_format = '#,##0.00'
-            ws[f'{e_col}{row_idx}'].font = entrada_font
-            ws[f'{e_col}{row_idx}'].fill = entrada_fill
-            ws[f'{e_col}{row_idx}'].border = thin_border
-            ws[f'{e_col}{row_idx}'].alignment = right_align
+            # Escrever células
+            c_s = ws.cell(row=row_idx, column=col_idx, value=saldo)
+            c_s.number_format = '#,##0.00'
+            c_s.border = border
             
-            c_idx += 2
+            # Formatação condicional simples no Excel (Vermelho se negativo, Verde se positivo)
+            if saldo < 0:
+                c_s.font = Font(color="D50000")
+            elif saldo > 0:
+                c_s.font = Font(color="00C853")
+            
+            c_e = ws.cell(row=row_idx, column=col_idx+1, value=entrada)
+            c_e.number_format = '#,##0.00'
+            c_e.border = border
+            
+            col_idx += 2
         row_idx += 1
 
-    # Salvar em memória
-    output = io.BytesIO()
-    wb.save(output)
-    output.seek(0)
-    return output.getvalue()
+    out = io.BytesIO()
+    wb.save(out)
+    out.seek(0)
+    return out.getvalue()

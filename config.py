@@ -13,7 +13,7 @@ USUARIOS = {
     'obra': {'senha': 'Obra2025', 'setor': 'obra'},
     'Projetos': {'senha': 'Projetos2025', 'setor': 'projeto'},
     'marketing': {'senha': 'Marketing2025', 'setor': 'marketing'},
-    'Produtos': {'senha': 'Produtos2025', 'setor': 'Marketing'},
-    'Pos obra': {'senha': 'Pos-obra2025', 'setor': 'Pos obra'},
-    'ADM': {'senha': 'C2025asaOrange', 'setor': 'Adiministrador'}
+    'Produtos': {'senha': 'Produtos2025', 'setor': 'produtos'}, 
+    'Pos obra': {'senha': 'Pos-obra2025', 'setor': 'pos_obra'},
+    'ADM': {'senha': 'C2025asaOrange', 'setor': 'admin'}
 }
