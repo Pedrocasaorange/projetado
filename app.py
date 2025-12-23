@@ -51,19 +51,18 @@ def sistema():
 @login_required
 def api_dados():
     todos_dados, meses, saldos = carregar_dados()
-    
-    # Determina qual setor filtrar
+   
     req_setor = request.args.get('setor')
+    
     setor_alvo = req_setor if session['is_admin'] and req_setor else session['setor']
     
-    # Filtra dados do array principal
     dados_filtrados = [d for d in todos_dados if d.get('setor') == setor_alvo]
     
     return jsonify({
         'success': True,
         'dados': dados_filtrados,
         'meses': meses,
-        'saldos_iniciais': saldos, # Envia tudo, o front filtra o setor
+        'saldos_iniciais': saldos, 
         'setor_atual': setor_alvo
     })
 
@@ -75,7 +74,7 @@ def api_atualizar():
     
     setor_alvo = data.get('setor') if session['is_admin'] and data.get('setor') else session['setor']
     
-    # Atualiza entrada
+  
     todos_dados = [d for d in todos_dados if not (
         d['mes'] == data['mes'] and 
         d['empreendimento'] == data['empreendimento'] and 
@@ -103,7 +102,7 @@ def api_atualizar_saldo_inicial():
     
     todos_dados, meses, saldos = carregar_dados()
     
-    # Garante estrutura: saldos = { "obra": { "ALLEGRO": 100 }, ... }
+  
     if setor_alvo not in saldos:
         saldos[setor_alvo] = {}
     
@@ -121,7 +120,7 @@ def api_exportar():
     todos_dados, meses, saldos = carregar_dados()
     dados_filtrados = [d for d in todos_dados if d.get('setor') == setor_alvo]
     
-    # Pega saldos específicos desse setor
+
     saldos_setor = saldos.get(setor_alvo, {})
     
     excel_file = gerar_excel(dados_filtrados, meses, saldos_setor, setor_alvo, EMPREENDIMENTOS)
@@ -136,10 +135,8 @@ def abrir_navegador():
     webbrowser.open("http://127.0.0.1:5000")
 
 if __name__ == '__main__':
-    carregar_dados() #
+    carregar_dados() 
     
-    # Inicia o timer para abrir o navegador após 1.5 segundos
     Timer(2.5, abrir_navegador).start()
-    
-    # Inicia o servidor Flask na porta 5000
+
     app.run(debug=False, port=5000)
